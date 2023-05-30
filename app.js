@@ -26,23 +26,84 @@ const boxRef = document.querySelector('.box');
 // }, 15000)
 
 
-const receipt = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('Kebab maj friend!');
-    }, 3001);
+// const receipt = new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//         resolve('Kebab maj friend!');
+//     }, 3001);
+//
+//     setTimeout(() => {
+//         reject('No kebab, łonna fajt?')
+//     }, 3000);
+// });
+//
+// console.log(receipt)
+//
+// receipt
+//     .then((msg) => {
+//         console.log(msg)
+//     })
+//     .catch((msg) => {
+//         console.log(msg)
+//     });
 
-    setTimeout(() => {
-        reject('No kebab, łonna fajt?')
-    }, 3000);
-});
+// function move(top, left) {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             boxRef.style.left = left;
+//             boxRef.style.top = top;
+//             resolve();
+//         }, 3000);
+//     });
+// }
+//
+// move(0, '500px')
+//     .then(() => move('500px', '500px'))
+//     .then(() => move('500px', 0))
+//     .then(() => move(0, 0));
 
-console.log(receipt)
+const url = 'https://api.nbp.pl/api/exchangerates/rates/a/chf/?format=json';
 
-receipt
-    .then((msg) => {
-        console.log(msg)
+// const request = fetch(url);
+//
+// request
+//     .then((response) => response.json())
+//     .then((data) => console.log(data.rates[0].mid))
+//     .catch(console.log);
+
+function myFetch(url) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                const response = JSON.parse(xhr.responseText)
+                resolve(response);
+            } else {
+                reject(xhr.status);
+            }
+        }
+
+        xhr.onerror = function () {
+            reject('Something is no yes!')
+        }
+
+        xhr.open('GET', url, true);
+        xhr.send()
     })
-    .catch((msg) => {
-        console.log(msg)
-    });
+}
+
+const request = myFetch(url);
+
+request
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error))
+    .finally(() => {console.log('done!')})
+
+
+
+
+
+
+
+
 
